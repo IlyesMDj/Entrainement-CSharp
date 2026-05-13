@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Exercice3/Exercice3.csproj" />
+  <Project Path="Exercice3Tests/Exercice3Tests.csproj" Id="70f20235-5f11-4ae6-9ee3-d36a64d2d495" />
+</Solution>

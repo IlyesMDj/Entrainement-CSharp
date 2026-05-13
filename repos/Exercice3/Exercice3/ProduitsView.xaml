@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="Exercice3.ProduitsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Exercice3"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid Background="LightGreen" Margin="0,0,-146,0">
+            <StackPanel Margin="5">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20" Height="20">
+                    <TextBox Text="{Binding NouveauNom, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Width="150" Margin="0,0,10,0" Tag="Nom"/>
+                    <TextBox Text="{Binding NouveauPrix, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Width="150" Margin="0,0,10,0" Tag="Prix"/>
+                    <TextBox Text="{Binding NouvelleQuantite, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Width="150" Margin="0,0,10,0" Tag="Mail"/>
+
+                    <Button Content="Ajouter le produit" Command="{Binding AjouterProduitCommand}" Width="120" Background="LightBlue"/>
+                    <TextBlock Text="Enregistrement en cours..." 
+                       Foreground="Orange"
+                       VerticalAlignment="Center"
+                       Margin="10,0,0,0"
+                       Visibility="{Binding AjouterProduitCommand.IsRunning, Converter={StaticResource BoolToVis}}" />
+
+                    <Button Content="Supprimer" Command="{Binding SupprimerProduitCommand}" Width="100" Background="LightPink"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" Margin="20" Background="#f0f0f0" Width="527" >
+                    <TextBlock Text="Modifier la sélection :" VerticalAlignment="Center" Margin="20,0,10,0"  FontWeight="Bold"/>
+
+                    <TextBox Text="{Binding ProduitSelectionne.Nom, UpdateSourceTrigger=PropertyChanged}" Width="150" Margin="0,0,10,0"/>
+                    <TextBox Text="{Binding ProduitSelectionne.Prix, UpdateSourceTrigger=PropertyChanged}" Width="39" Margin="0,0,10,0"/>
+                    <TextBox Text="{Binding ProduitSelectionne.Quantite, UpdateSourceTrigger=PropertyChanged}" Width="59" Margin="0,0,10,0"/>
+                    <Button Content="Sauvegarder" Command="{Binding ModifierProduitCommand}" Width="99" Background="LightGreen"/>
+                </StackPanel>
+
+                <DataGrid ItemsSource="{Binding ListeProduits}" SelectedItem="{Binding ProduitSelectionne}" AutoGenerateColumns="True" CanUserAddRows="False" IsReadOnly="False" Height="147" Width="690"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
+                    <TextBlock Text="Rechercher :" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBox Width="200" Text="{Binding TexteRecherche, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

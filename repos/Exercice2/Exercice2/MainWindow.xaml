@@ -1,0 +1,48 @@
+﻿<Window x:Class="Exercice2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Exercice2"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+
+            <RowDefinition Height="*"/>
+
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+            <TextBox Width="250"
+                     Margin="0,0,10,0"
+                     Padding="5"
+                     FontSize="16"
+                     Text="{Binding NomNouvelleTache, UpdateSourceTrigger=PropertyChanged}"
+                     />
+
+            <Button Content="Ajouter"
+                    Padding="15,5"
+                    FontSize="16"
+                    Command="{Binding AjouterTacheCommand}"/>
+        </StackPanel>
+        
+
+        <ListBox Grid.Row="1" ItemsSource="{Binding ListeTaches}">
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <CheckBox IsChecked="{Binding estTerminee}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+                        <TextBlock Text="{Binding Nom}" FontSize="18" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            
+            
+        </ListBox>
+    
+    </Grid>
+</Window>

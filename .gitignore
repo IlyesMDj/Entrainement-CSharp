@@ -1,0 +1,11 @@
+# Répertoires spécifiques à Visual Studio
+.vs/
+[Dd]ebug/
+[Rr]elease/
+bin/
+obj/
+
+# Fichiers utilisateur et logs
+*.user
+*.suo
+*.log
