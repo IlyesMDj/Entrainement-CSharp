@@ -1,0 +1,205 @@
+﻿<UserControl x:Class="MenuiserieApp.UI.Views.HistoriqueCommandeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converters="clr-namespace:MenuiserieApp.UI.Converters" mc:Ignorable="d"
+             Background="#F5F7FA" Height="804" Width="1162">
+
+    <UserControl.Resources>
+        <converters:StatutCouleurConverter x:Key="StatutCouleurConverter"/>
+
+        <Style x:Key="ModernDataGrid" TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#F1F5F9"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F8FAFC"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+        </Style>
+
+        <Style x:Key="ColumnHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,10"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="40">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Historique &amp; Modifications des Commandes" FontSize="28" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,24"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="24"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="12" Padding="16">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Toutes les commandes" FontSize="16" FontWeight="SemiBold" Foreground="#64748B" Margin="0,0,0,12"/>
+
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding ListeCommandes}" SelectedItem="{Binding CommandeSelectionnee}" Style="{StaticResource ModernDataGrid}" ColumnHeaderStyle="{StaticResource ColumnHeaderStyle}" IsReadOnly="True" Margin="0,0,0,16">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Référence" Binding="{Binding NumeroReference}" Width="120"/>
+                            <DataGridTextColumn Header="Client" Binding="{Binding Client.Nom}" Width="*"/>
+                            <DataGridTextColumn Header="Date" Binding="{Binding DateCommande, StringFormat=dd/MM/yyyy}" Width="90"/>
+                            <DataGridTemplateColumn Header="État" Width="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{Binding Statut, Converter={StaticResource StatutCouleurConverter}}" 
+                                CornerRadius="12" Padding="8,4" Margin="4" 
+                                HorizontalAlignment="Left" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Statut}" Foreground="White" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Button Grid.Row="2" Content="🗑 Supprimer Commande" HorizontalAlignment="Center" Padding="16,12" FontSize="15" FontWeight="Bold" Background="DarkRed" Foreground="White" BorderThickness="0" Cursor="Hand" Command="{Binding SupprimerCommandeCommand}" 
+                       CommandParameter="{Binding CommandeSelectionnee}" Width="272">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="12" Padding="20" Margin="10,0,0,-16">
+                <Grid Margin="0,0,0,6">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Contenu de la commande" FontSize="16" FontWeight="SemiBold" Foreground="#1E293B" Margin="0,-13,0,30"/>
+                    <Grid Grid.Row="0" Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="Modifier le statut :" Foreground="#64748B" FontSize="13" VerticalAlignment="Center" Margin="0,0,8,0"/>
+
+                            <ComboBox ItemsSource="{Binding StatutsDisponibles}"
+                              SelectedItem="{Binding CommandeSelectionnee.Statut, UpdateSourceTrigger=PropertyChanged}"
+                              Width="140" Padding="8,4" BorderBrush="#CBD5E1" Background="White"/>
+                        </StackPanel>
+                    </Grid>
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding CommandeSelectionnee.LigneCommandes}" Style="{StaticResource ModernDataGrid}" ColumnHeaderStyle="{StaticResource ColumnHeaderStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Désignation" Binding="{Binding Designation}" Width="2*"/>
+                            <DataGridTextColumn Header="H (mm)" Binding="{Binding HauteurMm}" Width="60"/>
+                            <DataGridTextColumn Header="L (mm)" Binding="{Binding LargeurMm}" Width="60"/>
+                            <DataGridTextColumn Header="Qté" Binding="{Binding Quantite}" Width="50"/>
+                            <DataGridTextColumn Header="P.U. (€)" Binding="{Binding PrixUnitaire, StringFormat=N2}" Width="80"/>
+
+                            <DataGridTemplateColumn Width="50">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="❌" Background="Transparent" BorderThickness="0" Cursor="Hand" Foreground="#EF4444"
+                                                Command="{Binding DataContext.SupprimerLigneCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Photo" Width="90">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Image Source="{Binding CheminImage}" Height="30" Width="30" Stretch="Uniform" Margin="0,0,8,0"/>
+
+                                            <Button Content="📁"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Cursor="Hand"
+                                                FontSize="14"
+                                                ToolTip="Associer une photo"
+                                                Command="{Binding DataContext.AjouterImageCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Button Grid.Row="1" Content="💾 Enregistrer les Modifications" Margin="296,506,0,36" Padding="0,12" FontSize="15" FontWeight="Bold" Background="#2563EB" Foreground="White" BorderThickness="0" Cursor="Hand"
+                            Command="{Binding EnregistrerModificationsCommand}" Grid.RowSpan="2">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button Grid.Row="1" Content="📄 Créer la Facture PDF" HorizontalAlignment="Left" Padding="16,12" FontSize="15" FontWeight="Bold" Background="#10B981" Foreground="White" BorderThickness="0" Cursor="Hand" Command="{Binding GenererDocumentCommand}" Margin="10,506,0,36" Width="272" Grid.RowSpan="2">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button Grid.Row="2" Content="+ Ajouter une ligne à la commande" HorizontalAlignment="Center" Padding="5,12" FontSize="15" FontWeight="Bold" Background="BlueViolet" Foreground="White" BorderThickness="0" Cursor="Hand" Command="{Binding AjouterLigneHistoriqueCommand}" Margin="0,60,0,-16" Width="296">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Montant Total :" 
+                           FontSize="18" 
+                           Foreground="#64748B"
+                           Margin="0,0,16,0"
+                           VerticalAlignment="Center"/>
+
+                        <TextBlock Text="{Binding DataContext.TotalCommande, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat=N2}" 
+                           FontSize="32" 
+                           FontWeight="Bold"
+                           Foreground="#2563EB"
+                           VerticalAlignment="Center"/>
+
+                        <TextBlock Text=" €" 
+                           FontSize="24" 
+                           FontWeight="SemiBold"
+                           Foreground="#2563EB"
+                           VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
