@@ -110,6 +110,21 @@ namespace Exercice3
             await RafraichirListeAsync();
         }
 
+        [RelayCommand(IncludeCancelCommand = true)]
+        private async Task TravailLong(CancellationToken token)
+        {
+            try
+            {
+                await Task.Delay(5000, token);
+
+                WeakReferenceMessenger.Default.Send(new NotificationMessage("Le travail est fini !"));
+            }
+            catch (OperationCanceledException)
+            {
+                WeakReferenceMessenger.Default.Send(new NotificationMessage("Action annulee par l'utilisateur."));
+            }
+        }
+
         partial void OnTexteRechercheChanged(string value)
         {
             _ = ExecuterRechercheAsync();
